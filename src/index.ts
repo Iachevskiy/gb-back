@@ -1,8 +1,11 @@
-import { serve } from "bun";
-import { testRoute } from "./routes/testRoute";
-import "./db.ts";
+import { db } from "./db.ts";
 
-serve({
-    fetch: testRoute,
-    port: Number(process.env.PORT) || 3000,
-});
+import { buildSchema } from 'drizzle-graphql';
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+
+const { schema } = buildSchema(db);
+const server = new ApolloServer({ schema });
+const { url } = await startStandaloneServer(server);
+
+console.log(`🚀 Server ready at ${url}`);

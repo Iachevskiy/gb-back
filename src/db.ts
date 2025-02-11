@@ -1,6 +1,8 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
+import * as dbSchema from './models/testModel.ts';
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
@@ -15,4 +17,4 @@ pool.connect()
         process.exit(1);
     });
 
-export const db = drizzle(pool);
+export const db = drizzle({client:pool, schema: dbSchema});
