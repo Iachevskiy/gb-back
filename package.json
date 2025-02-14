@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/pg": "^8.11.11",
+    "@types/speakeasy": "^2.0.10",
     "drizzle-orm": "latest",
     "pg": "latest"
   },
@@ -20,10 +21,12 @@
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",
+    "@graphql-tools/schema": "^10.0.18",
     "drizzle-graphql": "^0.8.5",
     "drizzle-kit": "^0.30.4",
     "graphql": "^16.10.0",
     "graphql-middleware": "^6.1.35",
-    "graphql-shield": "^7.6.5"
+    "graphql-shield": "^7.6.5",
+    "speakeasy": "^2.0.0"
   }
 }
