@@ -92,9 +92,11 @@ const prepareRule = (permission: Permission, forOwner: boolean) => {
     })
 }
 
+
 const queryMapPermissions: {[K in keyof typeof drizzleGraphql.entities.queries]?: IRule} = {
     // permissionsToRoles: prepareRule(Permission.READ_USERS, false),
     permissionsToRoles: rule()(()=> true),
+    roles: rule()(()=> true),
 };
 
 const mutationMapPermissions: {[K in keyof typeof drizzleGraphql.entities.mutations]?: IRule} = {
@@ -132,7 +134,7 @@ const { url } = await startStandaloneServer(server, {
         const { query = "", operationName = "" } = req.body;
 
         // console.log('data', typeof req, query, operationName);
-        console.log('data context');
+        // console.log('data context');
         return {};
     },
 });

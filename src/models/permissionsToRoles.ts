@@ -1,6 +1,7 @@
 import {boolean, pgTable, primaryKey, uuid} from "drizzle-orm/pg-core";
 import permissions from './permissions.ts'
 import roles from './roles.ts'
+import {relations} from "drizzle-orm";
 
 export const permissionsToRoles = pgTable(
     "role_permissions",
@@ -17,3 +18,15 @@ export const permissionsToRoles = pgTable(
         pk: primaryKey({ columns: [t.roleId, t.permissionId] }), // Уникальная пара (roleId, permissionId)
     })
 );
+
+
+export const permissionsToRolesRelations = relations(permissionsToRoles, ({ one }) => ({
+    roles: one(roles, {
+        fields: [permissionsToRoles.roleId],
+        references: [roles.id],
+    }),
+    permissions: one(permissions, {
+        fields: [permissionsToRoles.permissionId],
+        references: [permissions.id],
+    }),
+}));
