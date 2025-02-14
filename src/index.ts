@@ -20,6 +20,7 @@ enum Permission {
 const prepareRule = (permission: Permission, forOwner: boolean) => {
     return rule()(async (parent, args, ctx, info) => {
         // const currentUserRoleId = ctx.user.ruleId as string;
+        console.log('parent', ctx);
 
         const can = ctx.user?.permissions?.includes(permission);
 
@@ -32,15 +33,15 @@ const prepareRule = (permission: Permission, forOwner: boolean) => {
 }
 
 const queryMapPermissions: Record<keyof typeof drizzleGraphql.entities.queries , IRule> = {
-    testModelSingle: prepareRule(Permission.READ_USERS, false),
-    testModel: prepareRule(Permission.DELETE_USERS, false)
+    // testModelSingle: prepareRule(Permission.READ_USERS, false),
+    // testModel: prepareRule(Permission.DELETE_USERS, false)
 };
 
 const mutationMapPermissions: Record<keyof typeof drizzleGraphql.entities.mutations , IRule> = {
-    insertIntoTestModel: prepareRule(Permission.EDIT_USERS, true),
-    deleteFromTestModel: prepareRule(Permission.DELETE_USERS, true),
-    updateTestModel: prepareRule(Permission.EDIT_USERS, true),
-    insertIntoTestModelSingle: prepareRule(Permission.EDIT_USERS, true)
+    // insertIntoTestModel: prepareRule(Permission.EDIT_USERS, true),
+    // deleteFromTestModel: prepareRule(Permission.DELETE_USERS, true),
+    // updateTestModel: prepareRule(Permission.EDIT_USERS, true),
+    // insertIntoTestModelSingle: prepareRule(Permission.EDIT_USERS, true)
 };
 
 const permissions = shield({
