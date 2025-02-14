@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text } from "drizzle-orm/pg-core";
 
 export default pgTable("users", {
     id: uuid("id").defaultRandom().primaryKey(),
