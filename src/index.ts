@@ -92,12 +92,12 @@ const prepareRule = (permission: Permission, forOwner: boolean) => {
     })
 }
 
-const queryMapPermissions: Record<keyof typeof drizzleGraphql.entities.queries , IRule> = {
+const queryMapPermissions: {[K in keyof typeof drizzleGraphql.entities.queries]?: IRule} = {
     // permissionsToRoles: prepareRule(Permission.READ_USERS, false),
     permissionsToRoles: rule()(()=> true),
 };
 
-const mutationMapPermissions: Record<keyof typeof drizzleGraphql.entities.mutations , IRule> = {
+const mutationMapPermissions: {[K in keyof typeof drizzleGraphql.entities.mutations]?: IRule} = {
     // insertIntoTestModel: prepareRule(Permission.EDIT_USERS, true),
     // deleteFromTestModel: prepareRule(Permission.DELETE_USERS, true),
     // updateTestModel: prepareRule(Permission.EDIT_USERS, true),
