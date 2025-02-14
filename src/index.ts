@@ -4,9 +4,7 @@ import { buildSchema } from 'drizzle-graphql';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { applyMiddleware } from "graphql-middleware";
-import {rule, shield, type IRule, allow} from "graphql-shield";
-
-import { GraphQLError } from 'graphql';
+import {rule, shield, type IRule, deny} from "graphql-shield";
 
 const drizzleGraphql = buildSchema(db);
 
@@ -37,9 +35,7 @@ const prepareRule = (permission: Permission, forOwner: boolean) => {
 
 const queryMapPermissions: Record<keyof typeof drizzleGraphql.entities.queries , IRule> = {
     // permissionsToRoles: prepareRule(Permission.READ_USERS, false),
-    permissionsToRoles: allow,
-    // testModelSingle: prepareRule(Permission.READ_USERS, false),
-    // testModel: prepareRule(Permission.DELETE_USERS, false)
+    permissionsToRoles: rule()(()=> true),
 };
 
 const mutationMapPermissions: Record<keyof typeof drizzleGraphql.entities.mutations , IRule> = {
@@ -50,30 +46,14 @@ const mutationMapPermissions: Record<keyof typeof drizzleGraphql.entities.mutati
 };
 
 const permissions = shield({
-    // Query: queryMapPermissions,
-        Query: {
-            permissionsToRoles: allow,
-        },
+    Query: {
+        "*": deny,
+        ...queryMapPermissions
+    },
     Mutation: mutationMapPermissions,
 },
     {
-        fallbackRule: allow,
-        // debug: true
-        async fallbackError(thrownThing, parent, args, context, info) {
-            if (thrownThing instanceof GraphQLError) {
-                return thrownThing
-            }
-            if (thrownThing instanceof Error) {
-                // unexpected errors
-                console.error(thrownThing)
-                // await Sentry.report(thrownThing)
-                return new GraphQLError('Internal server error')
-            }
-            // what the hell got thrown
-            console.error('The resolver threw something that is not an error.')
-            console.error(thrownThing)
-            return new GraphQLError('Internal server error')
-        },
+        allowExternalErrors: true
     }
     );
 
