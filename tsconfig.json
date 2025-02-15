@@ -33,6 +33,7 @@
       "Drizzle/Entities/*": ["src/3-Drizzle/4-Entities/*"],
       "CustomSchemas/*": ["src/4-CustomSchemas/*"],
       "Middlewares/*": ["src/2-Middlewares/*"],
+      "App/*": ["src/1-App/*"]
     }
   }
 }

@@ -1,30 +1,19 @@
-import { applyMiddleware } from "graphql-middleware";
-import AppSchema from "./schema.ts"
-import { permissions } from "Middlewares/Permission"
-import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
+import AppServer from "./server.ts"
 
-const schema = applyMiddleware(AppSchema, permissions)
+export const initServer = async () => {
+    const { url } = await startStandaloneServer(AppServer, {
+        context: async ({ req }) => {
+            // @ts-ignore
+            const { query = "", operationName = "" } = req.body;
 
+            // console.log('data', typeof req, query, operationName);
+            // console.log('data context');
+            return {};
+        },
+    });
 
-const server = new ApolloServer({
-    schema,
-    // formatError: (err) => ({
-    //     message: err.message,
-    //     path: err.path,
-    // }),
-});
+    return url;
+}
 
-const { url } = await startStandaloneServer(server, {
-    context: async ({ req }) => {
-        // @ts-ignore
-        const { query = "", operationName = "" } = req.body;
-
-        // console.log('data', typeof req, query, operationName);
-        // console.log('data context');
-        return {};
-    },
-});
-
-console.log(`🚀 Server ready at ${url}`);
