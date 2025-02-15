@@ -22,6 +22,17 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "Drizzle/Schema/*": ["src/3-Drizzle/1-Schema/*"],
+      "Drizzle/EntityRelation/*": ["src/3-Drizzle/2-EntityRelation/*"],
+      "Drizzle/ManyToManyRelations/*": ["src/3-Drizzle/3-ManyToManyRelations/*"],
+      "Drizzle/Entities/*": ["src/3-Drizzle/4-Entities/*"],
+      "CustomSchemas/*": ["src/4-CustomSchemas/*"],
+      "Middlewares/*": ["src/2-Middlewares/*"],
+    }
   }
 }

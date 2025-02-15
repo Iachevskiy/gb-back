@@ -1,10 +1,10 @@
 {
   "name": "back",
-  "module": "src/index.ts",
+  "module": "src/1-App/index.ts",
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist && echo 'Done.'",
-    "dev": "bun src/index.ts --watch",
+    "dev": "bun src/1-App/index.ts --watch",
     "migrate:generate": "bunx drizzle-kit generate",
     "migrate:push": "bunx drizzle-kit push",
     "studio": "bunx drizzle-kit studio --port=3333"
