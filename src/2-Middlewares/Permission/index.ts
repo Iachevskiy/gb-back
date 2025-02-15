@@ -4,7 +4,8 @@ import { drizzleGraphql } from "Drizzle/Schema/Config";
 const queryMapPermissions: {[K in keyof typeof drizzleGraphql.entities.queries]?: IRule} = {
     // permissionsToRoles: prepareRule(Permission.READ_USERS, false),
     // permissionsToRoles: rule()(()=> true),
-    // roleModel: rule()(()=> true),
+    role: rule()(()=> true),
+    permission: rule()(()=> true),
 };
 
 const mutationMapPermissions: {[K in keyof typeof drizzleGraphql.entities.mutations]?: IRule} = {
