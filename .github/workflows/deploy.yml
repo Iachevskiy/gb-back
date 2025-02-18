@@ -71,9 +71,29 @@ jobs:
             --constraint 'node.role==worker' \
             --restart-condition none \
             ${{ env.IMAGE_MIGRATION_URL }}
-            
-            sleep 10  # Ожидание завершения миграций
+#
+#            sleep 10  # Ожидание завершения миграций
+#            docker service logs ${{ env.SERVICE_MIGRATION_NAME }}
+#            docker service rm ${{ env.SERVICE_MIGRATION_NAME }}  # Удаляем контейнер после выполнения
+
+            # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
+
+      - name: 2 Подключаемся по SSH и обновляем сервис в Swarm
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             docker service logs ${{ env.SERVICE_MIGRATION_NAME }}
+
+      - name: 3 Подключаемся по SSH и обновляем сервис в Swarm
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             docker service rm ${{ env.SERVICE_MIGRATION_NAME }}  # Удаляем контейнер после выполнения
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
