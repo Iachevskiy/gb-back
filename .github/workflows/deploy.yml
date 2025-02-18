@@ -17,6 +17,15 @@ jobs:
       - name: 🔹 Начало CI/CD
         run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }}"
 
+      # 🔹 4. Собираем и пушим Docker-образ бэка
+      - name: Build and Push Migrator Image
+        run: |
+                echo "Собираем и пушим Docker-образ бэка" \
+                docker buildx build --platform linux/amd64 \
+                  --build-arg DATABASE_URL=postgres://user:password@stage-db_db:5432/my_database \
+                  -t registry.good-buket-tech.ru/back2:${{ github.run_number }} \
+                  -f Dockerfile . --push
+
       # 🔹 2. Логинимся в Docker Registry
 #      - name: Login to Docker Registry
 #        run: echo "${{ secrets.DOCKER_REGISTRY_PASSWORD }}" | docker login registry.good-buket-tech.ru -u "${{ secrets.DOCKER_REGISTRY_USER }}" --password-stdin
@@ -31,14 +40,7 @@ jobs:
 #            echo "MIGRATIONS_NEEDED=false" >> $GITHUB_ENV
 #          fi
 
-      # 🔹 4. Собираем и пушим Docker-образ мигратора (если миграции нужны)
-#      - name: Build and Push Migrator Image
-#        if: env.MIGRATIONS_NEEDED == 'true'
-#        run: |
-#          docker buildx build --platform linux/amd64 \
-#            -t registry.good-buket-tech.ru/migrator:${{ github.run_number }} \
-#            -t registry.good-buket-tech.ru/migrator:latest \
-#            -f Dockerfile-migrator . --push
+
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
 #      - name: Run Database Migrations
