@@ -10,34 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 🔹 1. Клонируем код репозитория
-      - name: Checkout code
+      - name: Клонируем код репозитория
         uses: actions/checkout@v4
 
-      - name: Set image tag with formatted date-time
+      - name: Готовим переменную тега с датой и временем
         run: echo "IMAGE_TAG=$(date +'%d.%m.%Y_%H.%M.%S')" >> $GITHUB_ENV
 
-      - name: Устанавливаем переменную окружения DATABASE_URL
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+      - name: Устанавливаем переменную окружения IMAGE_URL
+        run: echo "IMAGE_URL=${{ secrets.REGISTRY_URL }}/${{ secrets.APP_NAME }}:${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
 
-      - name: 🔹 Начало CI/CD
-        run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }} ${{ env.IMAGE_TAG }} ${{ env.DATABASE_URL }}"
+      - name: Устанавливаем переменную окружения SERVICE_NAME
+        run: echo "SERVICE_NAME=${{ secrets.APP_NAME }}_stack__backend" >> $GITHUB_ENV
 
-      - name: Проверка наличия DATABASE_URL
-        run: |
-          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
-            echo "❌ Ошибка: секрет DATABASE_URL не передан!"
-            exit 1
-          else
-            echo "✅ DATABASE_URL загружен! ${{ secrets.DATABASE_URL }}"
-          fi
-
-      # 🔹 4. Собираем и пушим Docker-образ бэка
-      - name: Build and Push Migrator Image
+      - name: Собираем и пушим Docker-образ приложения
         run: |
                 docker buildx build --platform linux/amd64 \
                   --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
-                  -t registry.good-buket-tech.ru/back2:${{ env.IMAGE_TAG }} \
+                  -t ${{ env.IMAGE_URL }} \
                   -f Dockerfile . --push
 
       # 🔹 2. Логинимся в Docker Registry
@@ -52,38 +41,24 @@ jobs:
 #            echo "MIGRATIONS_NEEDED=true" >> $GITHUB_ENV
 #          else
 #            echo "MIGRATIONS_NEEDED=false" >> $GITHUB_ENV
-#          fi
+#          fi  REGISTRY_URL APP_NAME
 
 
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
-      - name: Run Database Migrations
+      - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Подключение успешно!"
-            docker service ls
-            docker service update --image registry.good-buket-tech.ru/back2:${{ env.IMAGE_TAG }} back2_backend
-            sleep 10  # Ожидание завершения миграций
-            docker service ps back2_backend
-            docker service logs back2_backend
+            docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+            docker service ps ${{ env.SERVICE_NAME }}
 #            docker stack deploy -c docker-compose.migrations.yml migrations_stack
 #            sleep 10  # Ожидание завершения миграций
 #            docker service logs migrations_stack_migrator
 #            docker stack rm migrations_stack  # Удаляем контейнер после выполнения
-
-#      docker service update --image registry.good-buket-tech.ru/back2:18.02.2025_09.23.03 back2_backend
-
-      # 🔹 6. Собираем и пушим Docker-образ бэкенда
-#      - name: Build and Push Backend Image
-#        run: |
-#          docker buildx build --platform linux/amd64 \
-#            -t registry.good-buket-tech.ru/backend:${{ github.run_number }} \
-#            -t registry.good-buket-tech.ru/backend:latest \
-#            -f Dockerfile . --push
 
       # 🔹 7. Подключаемся по SSH и обновляем сервис в Swarm
 #      - name: Deploy Backend to Swarm
