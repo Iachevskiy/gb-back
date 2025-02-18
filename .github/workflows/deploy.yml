@@ -54,6 +54,10 @@ jobs:
           script: |
             echo "Подключение успешно!"
             docker service ls
+            docker service update --image registry.good-buket-tech.ru/back2:${{ env.IMAGE_TAG }} back2_backend
+            sleep 10  # Ожидание завершения миграций
+            docker service ps back2_backend
+            docker service logs back2_backend
 #            docker stack deploy -c docker-compose.migrations.yml migrations_stack
 #            sleep 10  # Ожидание завершения миграций
 #            docker service logs migrations_stack_migrator
@@ -75,5 +79,5 @@ jobs:
 #          username: ${{ secrets.SSH_USER }}
 #          key: ${{ secrets.SSH_PRIVATE_KEY }}
 #          script: |
-#            docker service update --image registry.good-buket-tech.ru/backend:${{ github.run_number }} backend_backend
+#            docker service update --image registry.good-buket-tech.ru/backend:${{ github.run_number }} back2_backend
 #            docker service ps backend_backend
