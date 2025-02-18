@@ -16,23 +16,46 @@ jobs:
       - name: Готовим переменную тега с датой и временем
         run: echo "IMAGE_TAG=$(date +'%d.%m.%Y_%H.%M.%S')" >> $GITHUB_ENV
 
-      - name: Устанавливаем переменную окружения IMAGE_URL
+      - name: Устанавливаем переменную IMAGE_URL
         run: echo "IMAGE_URL=${{ secrets.REGISTRY_URL }}/${{ secrets.APP_NAME }}:${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
 
-      - name: Устанавливаем переменную окружения SERVICE_NAME
+      - name: Устанавливаем переменную IMAGE_URL_LATEST
+        run: echo "IMAGE_URL_LATEST=${{ secrets.REGISTRY_URL }}/${{ secrets.APP_NAME }}:latest" >> $GITHUB_ENV
+
+      - name: Устанавливаем переменную IMAGE_MIGRATION_URL
+        run: echo "IMAGE_MIGRATION_URL=${{ secrets.REGISTRY_URL }}/migration_${{ secrets.APP_NAME }}:latest" >> $GITHUB_ENV
+
+      - name: Устанавливаем переменную SERVICE_NAME
         run: echo "SERVICE_NAME=${{ secrets.APP_NAME }}_stack__backend" >> $GITHUB_ENV
+
+      - name: Устанавливаем переменную SERVICE_MIGRATION_NAME
+        run: echo "SERVICE_MIGRATION_NAME=migration_${{ secrets.APP_NAME }}" >> $GITHUB_ENV
 
       - name: Собираем и пушим Docker-образ приложения
         run: |
                 docker buildx build --platform linux/amd64 \
                   --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
                   -t ${{ env.IMAGE_URL }} \
-                  -t ${{ secrets.REGISTRY_URL }}/${{ secrets.APP_NAME }}:latest \
+                  -t ${{ env.IMAGE_URL_LATEST }} \
                   -f Dockerfile . --push
+
+      - name: Собираем и пушим Docker-образ приложения для миграции
+        run: |
+          docker buildx build --platform linux/amd64 \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            -t ${{ env.IMAGE_MIGRATION_URL }} \
+            -f Dockerfile-migrator . --push
 
       # 🔹 2. Логинимся в Docker Registry
 #      - name: Login to Docker Registry
 #        run: echo "${{ secrets.DOCKER_REGISTRY_PASSWORD }}" | docker login registry.good-buket-tech.ru -u "${{ secrets.DOCKER_REGISTRY_USER }}" --password-stdin
+
+# docker service create \
+      #  --name migrator \
+      #  --network app-network \
+      #  --constraint 'node.role==worker' \
+      #  --restart-condition none \
+      #  registry.good-buket-tech.ru/migrator:latest
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
       - name: Подключаемся по SSH и обновляем сервис в Swarm
@@ -42,10 +65,29 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker stack deploy -c /apps/gb-back-migrate.yml migration_${{ secrets.APP_NAME }}_stack
+            docker service create \
+            --name ${{ env.SERVICE_MIGRATION_NAME }} \
+            --network app-network \
+            --constraint 'node.role==worker' \
+            --restart-condition none \
+            ${{ env.IMAGE_MIGRATION_URL }}
+            
             sleep 10  # Ожидание завершения миграций
-            docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
-            docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
+            docker service logs ${{ env.SERVICE_MIGRATION_NAME }}
+            docker service rm ${{ env.SERVICE_MIGRATION_NAME }}  # Удаляем контейнер после выполнения
+
+      # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
+#      - name: Подключаемся по SSH и обновляем сервис в Swarm
+#        uses: appleboy/ssh-action@v0.1.10
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          script: |
+#            docker stack deploy -c /apps/gb-back-migrate.yml migration_${{ secrets.APP_NAME }}_stack
+#            sleep 10  # Ожидание завершения миграций
+#            docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
+#            docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
       - name: Подключаемся по SSH и обновляем сервис в Swarm
