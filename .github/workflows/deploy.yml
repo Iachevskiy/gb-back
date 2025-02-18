@@ -10,14 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-
       # 🔹 1. Клонируем код репозитория
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: 🔹 Начало CI/CD
-      - run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }}"
+        run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }}"
 
       # 🔹 2. Логинимся в Docker Registry
 #      - name: Login to Docker Registry
