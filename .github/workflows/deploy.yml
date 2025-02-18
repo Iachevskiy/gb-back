@@ -65,12 +65,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker service create \
+            timeout 30s docker service create \
             --name ${{ env.SERVICE_MIGRATION_NAME }} \
             --network app-network \
             --constraint 'node.role==worker' \
             --restart-condition none \
-            --timeout 30s \
             ${{ env.IMAGE_MIGRATION_URL }}
 
 
