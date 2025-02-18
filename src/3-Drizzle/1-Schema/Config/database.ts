@@ -4,7 +4,7 @@ export const DBClient = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
 
-const ff = process.env.DATABASE_URL || "url отсутвует"
+const ff = process.env.DATABASE_URL || "url отсутствует"
 
 DBClient.connect()
     .then(client => {
