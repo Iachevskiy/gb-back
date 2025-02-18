@@ -17,8 +17,11 @@ jobs:
       - name: Set image tag with formatted date-time
         run: echo "IMAGE_TAG=$(date +'%d.%m.%Y_%H.%M.%S')" >> $GITHUB_ENV
 
+      - name: Устанавливаем переменную окружения DATABASE_URL
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
       - name: 🔹 Начало CI/CD
-        run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }} ${{ env.IMAGE_TAG }}"
+        run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }} ${{ env.IMAGE_TAG }} ${{ env.DATABASE_URL }}"
 
       - name: Проверка наличия DATABASE_URL
         run: |
@@ -27,6 +30,7 @@ jobs:
             exit 1
           else
             echo "✅ DATABASE_URL загружен! ${{ secrets.DATABASE_URL }}"
+            exit 1
           fi
 
       # 🔹 4. Собираем и пушим Docker-образ бэка
