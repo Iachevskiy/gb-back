@@ -20,7 +20,6 @@ jobs:
       # 🔹 4. Собираем и пушим Docker-образ бэка
       - name: Build and Push Migrator Image
         run: |
-                echo "Собираем и пушим Docker-образ бэка" \
                 docker buildx build --platform linux/amd64 \
                   --build-arg DATABASE_URL=postgres://user:password@stage-db_db:5432/my_database \
                   -t registry.good-buket-tech.ru/back2:${{ github.run_number }} \
