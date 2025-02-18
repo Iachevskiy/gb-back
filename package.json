@@ -7,7 +7,10 @@
     "dev": "bun src/index.ts --watch",
     "migrate:generate": "bunx drizzle-kit generate",
     "migrate:push": "bunx drizzle-kit push",
-    "studio": "bunx drizzle-kit studio --port=3333"
+    "studio": "bunx drizzle-kit studio --port=3333",
+
+    "vps:push-image-app": "docker buildx build --platform linux/amd64 --build-arg DATABASE_URL=\"postgres://user:password@stage-db_db:5432/my_database\" -t registry.good-buket-tech.ru/back2:latest -f Dockerfile . --push",
+    "vps:push-image-migrator": "docker buildx build --platform linux/amd64 --build-arg DATABASE_URL=\"postgres://user:password@stage-db_db:5432/my_database\" -t registry.good-buket-tech.ru/migrator:latest -f Dockerfile-migrator . --push"
   },
   "devDependencies": {
     "@types/bun": "latest",
