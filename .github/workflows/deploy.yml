@@ -3,7 +3,7 @@ name: Deploy Backend to Swarm
 on:
   pull_request:
     branches:
-      - release  # Запускать CI/CD при PR в release-ветку
+      - main  # Запускать CI/CD при PR в release-ветку
 
 jobs:
   build-and-deploy:
