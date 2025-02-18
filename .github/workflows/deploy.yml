@@ -26,7 +26,7 @@ jobs:
             echo "❌ Ошибка: секрет DATABASE_URL не передан!"
             exit 1
           else
-            echo "✅ DATABASE_URL загружен!"
+            echo "✅ DATABASE_URL загружен! ${{ secrets.DATABASE_URL }}"
           fi
 
       # 🔹 4. Собираем и пушим Docker-образ бэка
