@@ -30,7 +30,7 @@ jobs:
             exit 1
           else
             echo "✅ DATABASE_URL загружен! ${{ secrets.DATABASE_URL }}"
-            exit 1
+#            exit 1
           fi
 
       # 🔹 4. Собираем и пушим Docker-образ бэка

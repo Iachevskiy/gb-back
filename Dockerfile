@@ -45,6 +45,10 @@ COPY . .
 #	•	Чтобы внутри контейнера были наши исходники.
 #	•	Без этой команды в контейнере не будет кода, и ничего не запустится.
 
+# Добавляем аргумент DATABASE_URL
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # Запускаем сервер
 ENTRYPOINT [ "bun", "run", "src/index.ts" ]
 
