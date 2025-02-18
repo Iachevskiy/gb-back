@@ -61,14 +61,3 @@ jobs:
 #            sleep 10  # Ожидание завершения миграций
 #            docker service logs migrations_stack_migrator
 #            docker stack rm migrations_stack  # Удаляем контейнер после выполнения
-
-      # 🔹 7. Подключаемся по SSH и обновляем сервис в Swarm
-#      - name: Deploy Backend to Swarm
-#        uses: appleboy/ssh-action@v0.1.10
-#        with:
-#          host: ${{ secrets.SSH_HOST }}
-#          username: ${{ secrets.SSH_USER }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          script: |
-#            docker service update --image registry.good-buket-tech.ru/backend:${{ github.run_number }} back2_backend
-#            docker service ps backend_backend
