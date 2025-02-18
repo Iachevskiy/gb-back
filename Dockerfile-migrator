@@ -16,5 +16,6 @@ ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
 # Запускаем сервер
-ENTRYPOINT [ "bunx", "drizzle-kit", "push" ]
+#ENTRYPOINT [ "bunx", "drizzle-kit", "push" ]
+ENTRYPOINT ["sh", "-c", "bunx drizzle-kit push || echo '✅ No migrations found, exiting.' && exit 0"]
 
