@@ -24,7 +24,7 @@ jobs:
       - name: Build and Push Migrator Image
         run: |
                 docker buildx build --platform linux/amd64 \
-                  --build-arg DATABASE_URL=postgres://user:password@stage-db_db:5432/my_database \
+                  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
                   -t registry.good-buket-tech.ru/back2:${{ env.IMAGE_TAG }} \
                   -f Dockerfile . --push
 
@@ -62,6 +62,8 @@ jobs:
 #            sleep 10  # Ожидание завершения миграций
 #            docker service logs migrations_stack_migrator
 #            docker stack rm migrations_stack  # Удаляем контейнер после выполнения
+
+#      docker service update --image registry.good-buket-tech.ru/back2:18.02.2025_09.23.03 back2_backend
 
       # 🔹 6. Собираем и пушим Docker-образ бэкенда
 #      - name: Build and Push Backend Image
