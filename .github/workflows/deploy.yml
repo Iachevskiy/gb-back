@@ -45,14 +45,15 @@ jobs:
 
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
-#      - name: Run Database Migrations
-#        if: env.MIGRATIONS_NEEDED == 'true'
-#        uses: appleboy/ssh-action@v0.1.10
-#        with:
-#          host: ${{ secrets.SSH_HOST }}
-#          username: ${{ secrets.SSH_USER }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          script: |
+      - name: Run Database Migrations
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Подключение успешно!"
+            docker service ls
 #            docker stack deploy -c docker-compose.migrations.yml migrations_stack
 #            sleep 10  # Ожидание завершения миграций
 #            docker service logs migrations_stack_migrator
