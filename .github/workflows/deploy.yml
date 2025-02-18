@@ -25,7 +25,7 @@ jobs:
         run: |
                 docker buildx build --platform linux/amd64 \
                   --build-arg DATABASE_URL=postgres://user:password@stage-db_db:5432/my_database \
-                  -t registry.good-buket-tech.ru/back2:${{ github.env.IMAGE_TAG }} \
+                  -t registry.good-buket-tech.ru/back2:${{ env.IMAGE_TAG }} \
                   -f Dockerfile . --push
 
       # 🔹 2. Логинимся в Docker Registry
