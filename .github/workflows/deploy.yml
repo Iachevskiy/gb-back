@@ -20,6 +20,15 @@ jobs:
       - name: 🔹 Начало CI/CD
         run: echo "➡️ CI/CD запущен для ветки ${{ github.ref }} ${{ env.IMAGE_TAG }}"
 
+      - name: Проверка наличия DATABASE_URL
+        run: |
+          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
+            echo "❌ Ошибка: секрет DATABASE_URL не передан!"
+            exit 1
+          else
+            echo "✅ DATABASE_URL загружен!"
+          fi
+
       # 🔹 4. Собираем и пушим Docker-образ бэка
       - name: Build and Push Migrator Image
         run: |
