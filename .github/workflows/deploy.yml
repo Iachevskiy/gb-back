@@ -70,11 +70,9 @@ jobs:
             --network app-network \
             --constraint 'node.role==worker' \
             --restart-condition none \
+            --timeout 30s \
             ${{ env.IMAGE_MIGRATION_URL }}
-#
-#            sleep 10  # Ожидание завершения миграций
-#            docker service logs ${{ env.SERVICE_MIGRATION_NAME }}
-#            docker service rm ${{ env.SERVICE_MIGRATION_NAME }}  # Удаляем контейнер после выполнения
+
 
             # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
 
