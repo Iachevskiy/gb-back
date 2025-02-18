@@ -41,7 +41,7 @@ jobs:
 #            echo "MIGRATIONS_NEEDED=true" >> $GITHUB_ENV
 #          else
 #            echo "MIGRATIONS_NEEDED=false" >> $GITHUB_ENV
-#          fi  REGISTRY_URL APP_NAME
+#          fi  REGISTRY_URL APP_NAME gb_back
 
 
       # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
