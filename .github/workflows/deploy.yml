@@ -78,7 +78,7 @@ jobs:
           target: "/apps/${{ env.SERVICE_APP_COMPOSE_PATH }}"
           strip_components: 1
 
-      - name: Подключаемся по SSH и проверяем есть ли сервис
+      - name: Подключаемся по SSH и удаляем файлы compose
         id: check-service
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -87,11 +87,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           allenvs: true
           script: |
-            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
-              echo "true";
-            else
-              echo "false";
-            fi
+            rm -rf /apps/${{ env.SERVICE_APP_COMPOSE_PATH }}
 
       - name: Устанавливаем переменную SERVICE_IS_EXISTS
         run: echo "SERVICE_IS_EXISTS=${{ steps.check-service.outputs.stdout }}" >> $GITHUB_ENV
