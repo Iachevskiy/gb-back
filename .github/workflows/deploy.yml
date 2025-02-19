@@ -34,8 +34,8 @@ jobs:
       - name: Устанавливаем переменную SERVICE_MIGRATION_NAME
         run: echo "SERVICE_MIGRATION_NAME=migration_${{ secrets.APP_NAME }}" >> $GITHUB_ENV
 
-      - name: Устанавливаем переменную SERVICE_APP_COMPOSE
-        run: echo "SERVICE_APP_COMPOSE=${{ secrets.APP_NAME }}_app-compose.yml" >> $GITHUB_ENV
+      - name: Устанавливаем переменную SERVICE_APP_COMPOSE_PATH
+        run: echo "SERVICE_APP_COMPOSE_PATH=${{ secrets.APP_NAME }}_composes" >> $GITHUB_ENV
 
 #      - name: Собираем и пушим Docker-образ приложения
 #        run: |
@@ -74,8 +74,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "deploy/app-compose.yml"
-          target: "/apps/${{ env.SERVICE_APP_COMPOSE }}"
+          source: "deploy/app-compose.yml,deploy/app-compose2.yml"
+          target: "/apps/${{ env.SERVICE_APP_COMPOSE_PATH }}"
 
       - name: Подключаемся по SSH и проверяем есть ли сервис
         id: check-service
