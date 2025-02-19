@@ -65,6 +65,15 @@ jobs:
 #            docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
 #            docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
+      - name: Копируем compose-файл на VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "deploy/gb-back.yml"
+          target: "/apps/gb-back.yml"
+
       - name: Подключаемся по SSH и проверяем есть ли сервис
         id: check-service
         uses: appleboy/ssh-action@v1.2.0
