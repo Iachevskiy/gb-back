@@ -75,6 +75,8 @@ jobs:
           script: |
             if true; then 
               echo "✅ Service exists, updating..."; 
+            else
+              echo "🚀 Service does not exist, creating...";
             fi
             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             docker service ps ${{ env.SERVICE_NAME }}
