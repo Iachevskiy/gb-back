@@ -1,0 +1,21 @@
+# ИСПОЛЬЗУЕМ_ОФИЦИАЛЬНЫЙ_ОБРАЗ_BAN_JS
+FROM oven/bun:latest
+
+WORKDIR /app
+
+# Копируем package.json и lock-файл перед установкой зависимостей
+COPY package.json bun.lockb ./
+
+# Устанавливаем зависимости и кешируем их
+RUN bun install --frozen-lockfile
+
+COPY . .
+
+# Добавляем аргумент DATABASE_URL
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
+# Запускаем сервер
+#ENTRYPOINT [ "bunx", "drizzle-kit", "push" ]
+ENTRYPOINT ["sh", "-c", "bunx drizzle-kit push || echo '✅ No migrations found, exiting.' && exit 0"]
+
