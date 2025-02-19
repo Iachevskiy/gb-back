@@ -71,8 +71,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "deploy/gb-back.yml"
-          target: "/apps/gb-back.yml"
+          source: "deploy/app-compose.yml"
+          target: "/apps/app-compose.yml"
 
       - name: Подключаемся по SSH и проверяем есть ли сервис
         id: check-service
