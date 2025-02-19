@@ -75,8 +75,8 @@ jobs:
               docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             else
               echo "🚀 Service does not exist, creating...";
+              docker stack deploy -c /apps/gb-back.yml gb_back_stack_backend
             fi
-            
             docker service ps ${{ env.SERVICE_NAME }}
 
 
