@@ -1,9 +1,10 @@
 name: Deploy Backend to Swarm
 
 on:
-  pull_request:
+  push:
     branches:
       - main  # Запускать CI/CD при PR в main-ветку
+  workflow_dispatch:  # Добавляет кнопку "Run Workflow" в GitHub Actions
 
 jobs:
   build-and-deploy:
