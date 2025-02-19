@@ -72,17 +72,13 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          allenvs: true
+          allenvs: true
           script: |
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
-              echo "::set-output name=SERVICE_IS_EXISTS::true";
-              echo "SERVICE_IS_EXISTS2=true";
               echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_OUTPUT
             else
               echo "🚀 Service does not exist, creating...";
-              echo "::set-output name=SERVICE_IS_EXISTS::false";
-              echo "SERVICE_IS_EXISTS2=true";
               echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_OUTPUT
             fi
             
