@@ -50,9 +50,7 @@ jobs:
 #      - name: Login to Docker Registry
 #        run: echo "${{ secrets.DOCKER_REGISTRY_PASSWORD }}" | docker login registry.good-buket-tech.ru -u "${{ secrets.DOCKER_REGISTRY_USER }}" --password-stdin
 
-
-      # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
-      - name: Подключаемся по SSH и обновляем сервис в Swarm
+      - name: Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -64,7 +62,6 @@ jobs:
             docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
             docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
-      # 🔹 5. Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -75,10 +72,11 @@ jobs:
           script: |
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
+              docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             else
               echo "🚀 Service does not exist, creating...";
             fi
-            docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+            
             docker service ps ${{ env.SERVICE_NAME }}
 
 
