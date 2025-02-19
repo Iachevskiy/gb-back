@@ -79,7 +79,7 @@ jobs:
             docker stack deploy -c ${{ env.SERVICE_APP_COMPOSE_PATH }}/app-compose-migration.yml ${{ env.SERVICE_MIGRATION_STACK }}
             sleep 10  # Ожидание завершения миграций
             docker service logs ${{ env.SERVICE_MIGRATION_NAME }}
-            docker stack rm {{ env.SERVICE_MIGRATION_STACK }}  # Удаляем контейнер после выполнения
+            docker stack rm ${{ env.SERVICE_MIGRATION_STACK }}  # Удаляем контейнер после выполнения
 
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v1.2.0
