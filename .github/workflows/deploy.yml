@@ -78,7 +78,7 @@ jobs:
             docker service ps ${{ env.SERVICE_NAME }}
 
 
-##             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+##          docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
 
 
 #            if true; then
