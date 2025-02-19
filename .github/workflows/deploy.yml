@@ -72,6 +72,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+            docker service ps ${{ env.SERVICE_NAME }}
+
+
+##             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+
+
 #            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
 #              echo "✅ Service exists, updating..."
 #            else
@@ -79,8 +86,3 @@ jobs:
 ##            docker stack deploy -c /apps/${{ env.SERVICE_NAME }}-compose.yml ${{ env.SERVICE_NAME }}
 #            fi
 #            docker service ps ${{ env.SERVICE_NAME }}
-            docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
-            docker service ps ${{ env.SERVICE_NAME }}
-
-
-##             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
