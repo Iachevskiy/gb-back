@@ -83,16 +83,17 @@ jobs:
               echo "🚀 Service does not exist, creating...";
               echo "::set-output name=SERVICE_IS_EXISTS::false";
               echo "SERVICE_IS_EXISTS2=true";
-              echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_OUTPUT
+              echo "SERVICE_IS_EXISTS3=true" >> "$GITHUB_OUTPUT"
             fi
             
 
       - name: Подключаемся по SSH и обновляем сервис в Swarm
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          allenvs: true
 #          script_stop: true
           script: |
             echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS3 }}"
