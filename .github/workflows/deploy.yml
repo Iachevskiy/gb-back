@@ -93,7 +93,7 @@ jobs:
               docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             else
               echo "🚀 Service does not exist, creating...";
-              docker stack deploy -c ${{ env.SERVICE_APP_COMPOSE_PATH }}/app-compose.yml ${{ env.SERVICE_STACK }}
+              IMAGE_URL=${{ env.IMAGE_URL }} docker stack deploy -c ${{ env.SERVICE_APP_COMPOSE_PATH }}/app-compose.yml ${{ env.SERVICE_STACK }}
             fi
 
             docker service ps ${{ env.SERVICE_NAME }}

@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: registry.good-buket-tech.ru/gb_back:latest
+    image: ${IMAGE_URL}
     networks:
       - app-network  # Обязательно подключаем к сети
     deploy:
