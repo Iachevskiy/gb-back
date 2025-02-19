@@ -29,22 +29,22 @@ jobs:
         run: echo "SERVICE_STACK=${{ secrets.APP_NAME }}_stack_" >> $GITHUB_ENV
 
       - name: Устанавливаем переменную SERVICE_NAME
-        run: echo "SERVICE_NAME=${{ env.SERVICE_STACK }}_backend" >> $GITHUB_ENV
+        run: echo "SERVICE_NAME=${{ env.SERVICE_STACK }}_app" >> $GITHUB_ENV
 
       - name: Устанавливаем переменную SERVICE_MIGRATION_NAME
         run: echo "SERVICE_MIGRATION_NAME=migration_${{ secrets.APP_NAME }}" >> $GITHUB_ENV
 
       - name: Устанавливаем переменную SERVICE_APP_COMPOSE_PATH
-        run: echo "SERVICE_APP_COMPOSE_PATH=${{ secrets.APP_NAME }}_composes" >> $GITHUB_ENV
+        run: echo "SERVICE_APP_COMPOSE_PATH=/apps/${{ secrets.APP_NAME }}_composes" >> $GITHUB_ENV
 
-#      - name: Собираем и пушим Docker-образ приложения
-#        run: |
-#                docker buildx build --platform linux/amd64 \
-#                  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
-#                  -t ${{ env.IMAGE_URL }} \
-#                  -t ${{ env.IMAGE_URL_LATEST }} \
-#                  -f Dockerfile . --push
-#
+      - name: Собираем и пушим Docker-образ приложения
+        run: |
+                docker buildx build --platform linux/amd64 \
+                  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+                  -t ${{ env.IMAGE_URL }} \
+                  -t ${{ env.IMAGE_URL_LATEST }} \
+                  -f Dockerfile . --push
+
 #      - name: Собираем и пушим Docker-образ приложения для миграции
 #        run: |
 #          docker buildx build --platform linux/amd64 \
@@ -75,7 +75,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "deploy/*"
-          target: "/apps/${{ env.SERVICE_APP_COMPOSE_PATH }}"
+          target: "${{ env.SERVICE_APP_COMPOSE_PATH }}"
           strip_components: 1
 
       - name: Подключаемся по SSH и удаляем файлы compose
@@ -87,10 +87,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           allenvs: true
           script: |
-            rm -rf /apps/${{ env.SERVICE_APP_COMPOSE_PATH }}
-
-      - name: Устанавливаем переменную SERVICE_IS_EXISTS
-        run: echo "SERVICE_IS_EXISTS=${{ steps.check-service.outputs.stdout }}" >> $GITHUB_ENV
+            rm -rf ${{ env.SERVICE_APP_COMPOSE_PATH }}
 
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v1.2.0
@@ -98,22 +95,14 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          allenvs: true
-#          script_stop: true
           script: |
-            ls
-            echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS }}"
-            echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
-#            echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
-#            echo "SERVICE_IS_EXISTS2=${{ env.SERVICE_IS_EXISTS2 }}"
+            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
+              echo "✅ Service exists, updating...";
+              docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+            else
+              echo "🚀 Service does not exist, creating...";
+              docker stack deploy -c ${{ env.SERVICE_APP_COMPOSE_PATH }}/app-compose.yml ${{ env.SERVICE_STACK }}
+            fi
 
-#            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
-#              echo "✅ Service exists, updating...";
-##              docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
-#            else
-#              echo "🚀 Service does not exist, creating...";
-##              docker stack deploy -c /apps/gb-back.yml ${{ env.SERVICE_STACK }}
-#            fi
-#
-#            docker service ps ${{ env.SERVICE_NAME }}
+            docker service ps ${{ env.SERVICE_NAME }}
 
