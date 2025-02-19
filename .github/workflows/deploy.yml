@@ -65,6 +65,23 @@ jobs:
             docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
             docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
+      - name: Подключаемся по SSH и проверяем есть ли сервис
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
+              echo "✅ Service exists, updating..."; 
+              echo "::set-output name=SERVICE_IS_EXISTS::true";
+            else
+              echo "🚀 Service does not exist, creating...";
+              echo "::set-output name=SERVICE_IS_EXISTS::false";
+            fi
+            
+            docker service ps ${{ env.SERVICE_NAME }}
+
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v0.1.10
         with:
