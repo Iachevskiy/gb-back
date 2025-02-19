@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  migrator:
+    image: registry.good-buket-tech.ru/migration_gb_back:latest
+    networks:
+      - app-network
+    deploy:
+      restart_policy:
+        condition: none  # Не перезапускать при ошибке
+      placement:
+        constraints:
+          - "node.role==worker"
+
+networks:
+  app-network:
+    external: true
