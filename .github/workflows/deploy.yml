@@ -79,7 +79,6 @@ jobs:
             else
               echo "false";
             fi
-#          register: service_status
 
       - name: Устанавливаем переменную SERVICE_IS_EXISTS
         run: echo "SERVICE_IS_EXISTS=${{ steps.check-service.outputs.stdout }}" >> $GITHUB_ENV
@@ -93,6 +92,7 @@ jobs:
           allenvs: true
 #          script_stop: true
           script: |
+            ls
             echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS }}"
             echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
 #            echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
