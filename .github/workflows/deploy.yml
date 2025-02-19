@@ -78,17 +78,6 @@ jobs:
           target: "${{ env.SERVICE_APP_COMPOSE_PATH }}"
           strip_components: 1
 
-      - name: Подключаемся по SSH и удаляем файлы compose
-        id: check-service
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          allenvs: true
-          script: |
-            rm -rf ${{ env.SERVICE_APP_COMPOSE_PATH }}
-
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -106,3 +95,14 @@ jobs:
 
             docker service ps ${{ env.SERVICE_NAME }}
 
+
+      - name: Подключаемся по SSH и удаляем файлы compose
+        id: check-service
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          allenvs: true
+          script: |
+            rm -rf ${{ env.SERVICE_APP_COMPOSE_PATH }}
