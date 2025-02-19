@@ -76,13 +76,8 @@ jobs:
           script: |
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
               echo "true"
-#              echo "✅ Service exists, updating...";
-#              echo IMAGE_URL ${{ env.IMAGE_URL }}
-#              echo "SERVICE_IS_EXISTS3=true" >> "$GITHUB_OUTPUT"
             else
               echo "false"
-#              echo "🚀 Service does not exist, creating...";
-#              echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_OUTPUT
             fi
 #          register: service_status
 
