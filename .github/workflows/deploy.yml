@@ -74,7 +74,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "deploy/app-compose.yml,deploy/app-compose2.yml"
+          source: "deploy/*"
           target: "/apps/${{ env.SERVICE_APP_COMPOSE_PATH }}"
 
       - name: Подключаемся по SSH и проверяем есть ли сервис
