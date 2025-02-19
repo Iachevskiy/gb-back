@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    image: ${IMAGE_URL}
+    networks:
+      - app-network  # Обязательно подключаем к сети
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1  # Сколько реплик обновлять одновременно
+        delay: 10s      # Задержка между обновлениями реплик
+        order: start-first  # Запустить новую версию перед остановкой старой
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.back2.rule=Host(`api2.good-buket-tech.ru`)"
+        - "traefik.http.routers.back2.tls=true"
+        - "traefik.http.routers.back2.tls.certresolver=letsencrypt"
+        - "traefik.http.services.back2.loadbalancer.server.port=4000"
+
+      placement:
+        constraints:
+          - "node.role==worker"
+
+networks:
+  app-network:
+    external: true
