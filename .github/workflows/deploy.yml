@@ -97,6 +97,7 @@ jobs:
 #          script_stop: true
           script: |
             echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS3 }}"
+            echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS3 }}
 #            echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
 #            echo "SERVICE_IS_EXISTS2=${{ env.SERVICE_IS_EXISTS2 }}"
 
