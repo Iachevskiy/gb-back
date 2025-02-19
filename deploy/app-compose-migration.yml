@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   migrator:
-    image: registry.good-buket-tech.ru/migration_gb_back:latest
+    image: ${IMAGE_URL}
     networks:
       - app-network
     deploy:
