@@ -3,6 +3,8 @@ services:
   db:
     image: postgres:15
     restart: always
+    env_file:
+      - .env  # Добавляем загрузку переменных окружения
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
