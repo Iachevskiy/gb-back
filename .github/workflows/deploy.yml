@@ -89,9 +89,6 @@ jobs:
 
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v0.1.10
-        env:
-          FOO: "BAR"
-          FOO2: ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
