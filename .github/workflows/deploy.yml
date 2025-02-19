@@ -74,7 +74,6 @@ jobs:
           script: |
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
               echo "✅ Service exists, updating..."
-#             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             else
             echo "🚀 Service does not exist, creating..."
 #            docker stack deploy -c /apps/${{ env.SERVICE_NAME }}-compose.yml ${{ env.SERVICE_NAME }}
@@ -82,3 +81,6 @@ jobs:
 #            docker service ps ${{ env.SERVICE_NAME }}
             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             docker service ps ${{ env.SERVICE_NAME }}
+
+
+##             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
