@@ -66,6 +66,7 @@ jobs:
             docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
       - name: Подключаемся по SSH и проверяем есть ли сервис
+        id: check-service
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -80,7 +81,6 @@ jobs:
               echo "::set-output name=SERVICE_IS_EXISTS::false";
             fi
             
-            docker service ps ${{ env.SERVICE_NAME }}
 
       - name: Подключаемся по SSH и обновляем сервис в Swarm
         uses: appleboy/ssh-action@v0.1.10
