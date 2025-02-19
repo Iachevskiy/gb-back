@@ -76,8 +76,8 @@ jobs:
             if [[ $(docker service inspect "$SERVICE_NAME") ]]; then
 #            if docker service inspect "${{ env.SERVICE_NAME }}" > /dev/null 2>&1; then
               echo "✅ Service exists, updating..."
-            else
-            echo "🚀 Service does not exist, creating..."
+#            else
+#            echo "🚀 Service does not exist, creating..."
 #            docker stack deploy -c /apps/${{ env.SERVICE_NAME }}-compose.yml ${{ env.SERVICE_NAME }}
             fi
 #            docker service ps ${{ env.SERVICE_NAME }}
