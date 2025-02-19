@@ -90,7 +90,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 #          script_stop: true
           script: |
-            echo steps.check-service.outputs.SERVICE_IS_EXISTS
+            echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
               docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
