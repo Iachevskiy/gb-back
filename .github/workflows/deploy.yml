@@ -34,53 +34,56 @@ jobs:
       - name: Устанавливаем переменную SERVICE_MIGRATION_NAME
         run: echo "SERVICE_MIGRATION_NAME=migration_${{ secrets.APP_NAME }}" >> $GITHUB_ENV
 
-      - name: Собираем и пушим Docker-образ приложения
-        run: |
-                docker buildx build --platform linux/amd64 \
-                  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
-                  -t ${{ env.IMAGE_URL }} \
-                  -t ${{ env.IMAGE_URL_LATEST }} \
-                  -f Dockerfile . --push
-
-      - name: Собираем и пушим Docker-образ приложения для миграции
-        run: |
-          docker buildx build --platform linux/amd64 \
-            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
-            -t ${{ env.IMAGE_MIGRATION_URL }} \
-            -f Dockerfile-migrator . --push
+#      - name: Собираем и пушим Docker-образ приложения
+#        run: |
+#                docker buildx build --platform linux/amd64 \
+#                  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+#                  -t ${{ env.IMAGE_URL }} \
+#                  -t ${{ env.IMAGE_URL_LATEST }} \
+#                  -f Dockerfile . --push
+#
+#      - name: Собираем и пушим Docker-образ приложения для миграции
+#        run: |
+#          docker buildx build --platform linux/amd64 \
+#            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+#            -t ${{ env.IMAGE_MIGRATION_URL }} \
+#            -f Dockerfile-migrator . --push
 
       # 🔹 2. Логинимся в Docker Registry
 #      - name: Login to Docker Registry
 #        run: echo "${{ secrets.DOCKER_REGISTRY_PASSWORD }}" | docker login registry.good-buket-tech.ru -u "${{ secrets.DOCKER_REGISTRY_USER }}" --password-stdin
 
-      - name: Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker stack deploy -c /apps/gb-back-migrate.yml migration_${{ secrets.APP_NAME }}_stack
-            sleep 10  # Ожидание завершения миграций
-            docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
-            docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
+#      - name: Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
+#        uses: appleboy/ssh-action@v0.1.10
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          script: |
+#            docker stack deploy -c /apps/gb-back-migrate.yml migration_${{ secrets.APP_NAME }}_stack
+#            sleep 10  # Ожидание завершения миграций
+#            docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
+#            docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
       - name: Подключаемся по SSH и проверяем есть ли сервис
         id: check-service
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          allenvs: true
           script: |
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
               echo "::set-output name=SERVICE_IS_EXISTS::true";
               echo "SERVICE_IS_EXISTS2=true";
+              echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_ENV
             else
               echo "🚀 Service does not exist, creating...";
               echo "::set-output name=SERVICE_IS_EXISTS::false";
               echo "SERVICE_IS_EXISTS2=true";
+              echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_ENV
             fi
             
 
@@ -97,13 +100,14 @@ jobs:
           script: |
             echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
             echo "SERVICE_IS_EXISTS2=${{ env.SERVICE_IS_EXISTS2 }}"
+            echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS2 }}"
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
-              echo "✅ Service exists, updating..."; 
-              docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+              echo "✅ Service exists, updating...";
+#              docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             else
               echo "🚀 Service does not exist, creating...";
-              docker stack deploy -c /apps/gb-back.yml ${{ env.SERVICE_STACK }}
+#              docker stack deploy -c /apps/gb-back.yml ${{ env.SERVICE_STACK }}
             fi
             
             docker service ps ${{ env.SERVICE_NAME }}
-            
+
