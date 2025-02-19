@@ -76,6 +76,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "deploy/*"
           target: "/apps/${{ env.SERVICE_APP_COMPOSE_PATH }}"
+          strip_components: 1
 
       - name: Подключаемся по SSH и проверяем есть ли сервис
         id: check-service
