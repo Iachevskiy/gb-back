@@ -65,7 +65,7 @@ jobs:
 #            docker service logs migration_${{ secrets.APP_NAME }}_stack_migrator
 #            docker stack rm migration_${{ secrets.APP_NAME }}_stack  # Удаляем контейнер после выполнения
 
-      - name: Копируем compose-файл на VPS
+      - name: Копируем compose-файлы на VPS
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
