@@ -95,6 +95,7 @@ jobs:
           script: |
             echo ${{ env.FOO }}
             echo ${{ env.SERVICE_IS_EXISTS }}
+            echo "SERVICE_IS_EXISTS: ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}"
             echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
