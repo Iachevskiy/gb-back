@@ -42,14 +42,14 @@ jobs:
                 docker buildx build --platform linux/amd64 \
                   --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
                   -t ${{ env.IMAGE_URL }} \
-                  -f Dockerfile . --push
+                  -f deploy/Dockerfile . --push
 
       - name: Собираем и пушим Docker-образ приложения для миграции
         run: |
           docker buildx build --platform linux/amd64 \
             --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
             -t ${{ env.IMAGE_MIGRATION_URL }} \
-            -f Dockerfile-migrator . --push
+            -f deploy/Dockerfile-migrator . --push
 
       # 🔹 2. Логинимся в Docker Registry
 #      - name: Login to Docker Registry
@@ -61,9 +61,9 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "deploy/*"
+          source: "deploy/init-files/*"
           target: "${{ env.SERVICE_APP_COMPOSE_PATH }}"
-          strip_components: 1
+          strip_components: 2
 
       - name: Подключаемся по SSH и запускаем миграции в Swarm (если миграции нужны)
         uses: appleboy/ssh-action@v0.1.10
