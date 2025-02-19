@@ -73,7 +73,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 #          script_stop: true
           script: |
-            if true; then 
+            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
             else
               echo "🚀 Service does not exist, creating...";
