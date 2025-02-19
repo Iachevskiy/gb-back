@@ -78,7 +78,7 @@ jobs:
               echo "✅ Service exists, updating..."; 
               echo "::set-output name=SERVICE_IS_EXISTS::true";
               echo "SERVICE_IS_EXISTS2=true";
-              echo "SERVICE_IS_EXISTS3=true" >> GITHUB_OUTPUT
+              echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_OUTPUT
             else
               echo "🚀 Service does not exist, creating...";
               echo "::set-output name=SERVICE_IS_EXISTS::false";
