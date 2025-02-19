@@ -97,7 +97,7 @@ jobs:
           script: |
 #            echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
 #            echo "SERVICE_IS_EXISTS2=${{ env.SERVICE_IS_EXISTS2 }}"
-#            echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS2 }}"
+            echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS2 }}"
 #            if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
 #              echo "✅ Service exists, updating...";
 ##              docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
