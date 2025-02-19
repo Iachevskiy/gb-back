@@ -73,7 +73,14 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 #          script_stop: true
           script: |
-                    echo 'if true; then echo "✅ Service exists, updating..."; fi'
+            echo 'if true; then echo "✅ Service exists, updating..."; fi'
+            docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+            docker service ps ${{ env.SERVICE_NAME }}
+
+
+##             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
+
+
 #            if true; then
 #              echo "✅ Service exists, updating..."
 #            fi
@@ -82,8 +89,3 @@ jobs:
 #            docker stack deploy -c /apps/${{ env.SERVICE_NAME }}-compose.yml ${{ env.SERVICE_NAME }}
 
 #            docker service ps ${{ env.SERVICE_NAME }}
-            docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
-            docker service ps ${{ env.SERVICE_NAME }}
-
-
-##             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
