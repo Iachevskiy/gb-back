@@ -75,14 +75,14 @@ jobs:
           allenvs: true
           script: |
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then
+              echo "true"
 #              echo "✅ Service exists, updating...";
 #              echo IMAGE_URL ${{ env.IMAGE_URL }}
 #              echo "SERVICE_IS_EXISTS3=true" >> "$GITHUB_OUTPUT"
-              echo "true"
             else
+              echo "false"
 #              echo "🚀 Service does not exist, creating...";
 #              echo "SERVICE_IS_EXISTS3=true" >> $GITHUB_OUTPUT
-              echo "false"
             fi
 #          register: service_status
 
@@ -98,8 +98,8 @@ jobs:
           allenvs: true
 #          script_stop: true
           script: |
-            echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXIST3 }}"
-            echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS3 }}
+            echo "SERVICE_IS_EXISTS3=${{ env.SERVICE_IS_EXISTS }}"
+            echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
 #            echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
 #            echo "SERVICE_IS_EXISTS2=${{ env.SERVICE_IS_EXISTS2 }}"
 
