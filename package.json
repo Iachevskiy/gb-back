@@ -5,6 +5,7 @@
   "scripts": {
     "clean": "rm -rf dist && echo 'Done.'",
     "dev": "bun src/index.ts --watch",
+    "dev-db": "docker compose -f deploy/docker-local-compose.yml up -d",
     "migrate:generate": "bunx drizzle-kit generate",
     "migrate:push": "bunx drizzle-kit push",
     "studio": "bunx drizzle-kit studio --port=3333"
