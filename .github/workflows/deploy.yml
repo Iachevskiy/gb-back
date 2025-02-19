@@ -71,15 +71,16 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script_stop: true
+#          script_stop: true
           script: |
-#            if [[ $(docker service inspect "$SERVICE_NAME") ]]; then
-            if true; then
-              echo "✅ Service exists, updating..."
+                    echo 'if true; then echo "✅ Service exists, updating..."; fi'
+#            if true; then
+#              echo "✅ Service exists, updating..."
+#            fi
 #            else
 #            echo "🚀 Service does not exist, creating..."
 #            docker stack deploy -c /apps/${{ env.SERVICE_NAME }}-compose.yml ${{ env.SERVICE_NAME }}
-            fi
+
 #            docker service ps ${{ env.SERVICE_NAME }}
             docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
             docker service ps ${{ env.SERVICE_NAME }}
