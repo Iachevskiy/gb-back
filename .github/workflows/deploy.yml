@@ -86,6 +86,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.10
         env:
           FOO: "BAR"
+          FOO2: steps.check-service.outputs.SERVICE_IS_EXISTS
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -93,6 +94,7 @@ jobs:
 #          script_stop: true
           script: |
             echo ${{ env.FOO }}
+            echo ${{ env.FOO2 }}
             echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
@@ -103,4 +105,4 @@ jobs:
             fi
             
             docker service ps ${{ env.SERVICE_NAME }}
-
+            
