@@ -76,9 +76,11 @@ jobs:
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
               echo "::set-output name=SERVICE_IS_EXISTS::true";
+              echo "SERVICE_IS_EXISTS2=true";
             else
               echo "🚀 Service does not exist, creating...";
               echo "::set-output name=SERVICE_IS_EXISTS::false";
+              echo "SERVICE_IS_EXISTS2=true";
             fi
             
 
@@ -93,10 +95,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 #          script_stop: true
           script: |
-            echo ${{ env.FOO }}
-            echo ${{ env.SERVICE_IS_EXISTS }}
-            echo "SERVICE_IS_EXISTS: ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}"
-            echo ${{ steps.check-service.outputs.SERVICE_IS_EXISTS }}
+            echo "SERVICE_IS_EXISTS=${{ env.SERVICE_IS_EXISTS }}"
+            echo "SERVICE_IS_EXISTS2=${{ env.SERVICE_IS_EXISTS2 }}"
             if docker service inspect ${{ env.SERVICE_NAME }} > /dev/null 2>&1; then 
               echo "✅ Service exists, updating..."; 
               docker service update --image ${{ env.IMAGE_URL }} ${{ env.SERVICE_NAME }}
